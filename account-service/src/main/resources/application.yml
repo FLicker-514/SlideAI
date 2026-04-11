@@ -1,0 +1,9 @@
+server:
+  port: 8081
+  address: 0.0.0.0
+
+spring:
+  application:
+    name: account-service
+
+# 业务阶段：数据源、JWT、邮件、管理员注册密钥等

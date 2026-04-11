@@ -1,0 +1,9 @@
+server:
+  port: 8085
+  address: 0.0.0.0
+
+spring:
+  application:
+    name: document-service
+
+# 业务阶段：Userdata 根目录、Python 调用参数、异步解析线程池等

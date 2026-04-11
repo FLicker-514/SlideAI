@@ -1,0 +1,9 @@
+server:
+  port: 8082
+  address: 0.0.0.0
+
+spring:
+  application:
+    name: llm-service
+
+# 业务阶段：API Key、prompts.yml、各模型路由等

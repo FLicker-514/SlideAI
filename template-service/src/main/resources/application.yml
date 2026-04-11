@@ -1,0 +1,15 @@
+server:
+  port: 8086
+  address: 0.0.0.0
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: template-service
+
+template:
+  layouts-path: data/layouts.json
+  html-dir: data/results
+
+# 业务阶段：静态页路径、版式持久化（DB/文件）等

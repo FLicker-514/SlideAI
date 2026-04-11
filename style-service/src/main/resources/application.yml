@@ -1,0 +1,9 @@
+server:
+  port: 8084
+  address: 0.0.0.0
+
+spring:
+  application:
+    name: style-service
+
+# 业务阶段：落盘路径、调用 llm-service、Python 脚本路径等

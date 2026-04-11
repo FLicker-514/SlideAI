@@ -1,0 +1,17 @@
+Userdata/
+docs/
+output/
+node_modules/
+target/
+__pycache__/
+*.py[cod]
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+*.log
+.idea/
+*.iml
+.vscode/
+.DS_Store
+frontend/.env
+frontend/.env.*

@@ -1,0 +1,9 @@
+server:
+  port: 8083
+  address: 0.0.0.0
+
+spring:
+  application:
+    name: outline-service
+
+# 业务阶段：调用 Python 进程/CLI 的路径与超时配置等

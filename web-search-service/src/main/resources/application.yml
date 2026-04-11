@@ -1,0 +1,20 @@
+server:
+  port: 8089
+  address: 0.0.0.0
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: web-search-service
+
+opensearch:
+  web-search:
+    protocol: http
+    endpoint: ${OPENSEARCH_ENDPOINT:}
+    app-group: ${OPENSEARCH_APP_GROUP:}
+    app-id: ${OPENSEARCH_APP_ID:}
+    bearer-token: ${OPENSEARCH_TOKEN:}
+    timeout-ms: 8000
+
+# 业务阶段：填入检索端点或通过环境变量注入，勿将密钥提交仓库

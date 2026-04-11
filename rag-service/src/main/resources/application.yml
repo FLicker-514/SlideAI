@@ -1,0 +1,23 @@
+server:
+  port: 8088
+  address: 0.0.0.0
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: rag-service
+
+rag:
+  project-root:
+  userdata-base:
+  python-path: python3
+  scripts-dir: scripts/RAG测试
+  vectorize-script: rag_vectorize_upload.py
+  retrieval-script: rag_problem_retrieval.py
+  embedding-provider: fallback
+  dimension: 1024
+  chunk-size: 500
+  overlap: 50
+
+# 业务阶段：向量维度、脚本路径与 embedding 提供方等

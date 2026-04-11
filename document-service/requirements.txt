@@ -1,0 +1,1 @@
+# 业务阶段补充依赖（如 pymupdf、pillow 等）
