@@ -1,0 +1,31 @@
+@import './base.css';
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary);
+  transition: color var(--transition);
+}
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* 主内容区统一容器：占满横向，留白尽量少 */
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 16px 12px;
+}
+
+@media (min-width: 640px) {
+  .app-main {
+    padding: 20px 16px;
+  }
+}

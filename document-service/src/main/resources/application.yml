@@ -1,9 +1,20 @@
 server:
   port: 8085
-  address: 0.0.0.0
 
 spring:
   application:
     name: document-service
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 
-# 业务阶段：Userdata 根目录、Python 调用参数、异步解析线程池等
+# Userdata 根目录；其下为 Userdata/{userId}/PDF、Userdata/{userId}/Image。为空则使用当前工作目录
+document:
+  project-root:
+  # Python 解释器路径（推荐用环境变量覆盖；默认 python3）
+  python-path: ${DOCUMENT_PYTHON_PATH:python3}
+  # parse_to_dir.py 路径（相对 project-root 或绝对路径），为空则从 document-service 目录查找
+  parser-script:
+  # caption_single.py 路径，用于图片 AI 描述；为空则从 document-service 目录查找
+  caption-script:

@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.learning</groupId>
         <artifactId>intelligent-ppt-system</artifactId>
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>document-service</artifactId>
     <packaging>jar</packaging>
+
     <name>document-service</name>
-    <description>文档服务骨架 — PDF/图片与 document_service Python 解析占位</description>
+    <description>文档服务 - 上传 PDF/图片，存储至 Userdata；PDF 可选解析为 content.md + images</description>
+
     <dependencies>
         <dependency>
             <groupId>com.learning</groupId>
@@ -29,6 +34,7 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

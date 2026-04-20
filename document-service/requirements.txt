@@ -1,1 +1,4 @@
-# 业务阶段补充依赖（如 pymupdf、pillow 等）
+# PDF 解析（parse_to_dir.py / document_service）依赖
+# 在 document-service 目录或项目根目录执行: pip install -r document-service/requirements.txt
+requests>=2.28.0
+Pillow>=9.0.0

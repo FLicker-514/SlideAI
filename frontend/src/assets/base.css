@@ -1,0 +1,104 @@
+/* 设计变量 */
+:root {
+  --vt-c-white: #ffffff;
+  --vt-c-white-soft: #f8fafc;
+  --vt-c-white-mute: #f1f5f9;
+
+  --vt-c-black: #0f172a;
+  --vt-c-black-soft: #1e293b;
+  --vt-c-black-mute: #334155;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #dbeafe;
+  --vt-c-indigo: #2563eb;
+  --vt-c-red: #dc2626;
+  --vt-c-green: #16a34a;
+
+  --vt-c-divider-light-1: rgba(15, 23, 42, 0.12);
+  --vt-c-divider-light-2: rgba(15, 23, 42, 0.08);
+  --vt-c-divider-dark-1: rgba(248, 250, 252, 0.2);
+  --vt-c-divider-dark-2: rgba(248, 250, 252, 0.12);
+
+  --vt-c-text-light-1: #0f172a;
+  --vt-c-text-light-2: #475569;
+  --vt-c-text-dark-1: #f8fafc;
+  --vt-c-text-dark-2: #94a3b8;
+
+  --color-background: #ffffff;
+  --color-background-soft: #f8fafc;
+  --color-background-mute: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-hover: #cbd5e1;
+  --color-heading: #0f172a;
+  --color-text: #334155;
+  --color-text-muted: #64748b;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.06);
+  --transition: 0.2s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-light: rgba(37, 99, 235, 0.25);
+    --color-background: #0f172a;
+    --color-background-soft: #1e293b;
+    --color-background-mute: #334155;
+    --color-border: #334155;
+    --color-border-hover: #475569;
+    --color-heading: #f8fafc;
+    --color-text: #cbd5e1;
+    --color-text-muted: #94a3b8;
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  line-height: 1.6;
+  font-family:
+    'PingFang SC',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 全局表单控件基础样式（各页可覆盖） */
+input[type='text'],
+input[type='email'],
+input[type='password'] {
+  font-size: 15px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+button {
+  font-size: 15px;
+  transition: background-color var(--transition), opacity var(--transition);
+}
