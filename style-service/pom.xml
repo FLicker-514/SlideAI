@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.learning</groupId>
         <artifactId>intelligent-ppt-system</artifactId>
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>style-service</artifactId>
     <packaging>jar</packaging>
+
     <name>style-service</name>
-    <description>风格服务骨架 — 与根目录 Python 提取脚本协作（业务后续补充）</description>
+    <description>风格服务 - 从 PPT 提取背景与字体，保存为 HTML/font.json，供制作工坊选用</description>
+
     <dependencies>
         <dependency>
             <groupId>com.learning</groupId>
@@ -29,6 +34,7 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

@@ -1,1 +1,4 @@
-# 业务阶段补充（如 python-pptx 等，用于从 PPT 提取风格）
+# PPT 风格提取脚本 extract_style_from_ppt.py 依赖
+spire-presentation>=11.0.0
+# 可选：用于将纯背景 HTML 渲染为 16:9 PNG；安装后需执行 playwright install chromium
+playwright>=1.40.0

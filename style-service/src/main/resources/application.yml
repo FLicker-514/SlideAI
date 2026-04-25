@@ -1,9 +1,24 @@
 server:
   port: 8084
-  address: 0.0.0.0
 
 spring:
   application:
     name: style-service
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 
-# 业务阶段：落盘路径、调用 llm-service、Python 脚本路径等
+# Userdata 根目录：其下为 Userdata/{userId}/（存放 history.json、{styleId}-background-1/2/3.html、{styleId}-font.json）
+# 为空则使用当前工作目录
+style:
+  project-root: 
+  # 从 PPT 提取背景与字体的 Python 脚本路径（相对 project-root 或绝对路径），为空则从 style-service 目录查找
+  script-path:
+  # 用于执行提取脚本的 Python 可执行路径。若已用 conda 安装 spire-presentation，请填 conda 的 python（如：/Users/xxx/miniconda3/bin/python3）
+  python-path: /Users/flicker/miniconda3/bin/python3
+
+# 描述生成风格时调用的 LLM 服务地址（文生图 + 风格标签）
+llm:
+  service:
+    base-url: http://localhost:8082
