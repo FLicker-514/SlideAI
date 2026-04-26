@@ -10,8 +10,17 @@ spring:
 
 component:
   storage:
+    # 按要求：保存到 component-service/Userdata/用户ID/...
     base-dir: Userdata
   llm:
+    # llm-service 的地址（本地开发）
     base-url: http://localhost:8082
+    provider: qwen
+    prompt-key: ppt-component-html
 
-# 业务阶段：调用 llm-service、组件 JSON/HTML 存储策略等
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
