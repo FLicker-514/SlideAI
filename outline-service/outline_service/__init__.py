@@ -1,1 +1,3 @@
-# 大纲生成 Python 包占位；业务实现请在主工程迭代。
+# outline_service package
+from .generator import generate_outline, flatten_outline
+__all__ = ["generate_outline", "flatten_outline"]
