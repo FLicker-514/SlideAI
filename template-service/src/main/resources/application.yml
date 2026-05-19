@@ -7,9 +7,15 @@ server:
 spring:
   application:
     name: template-service
-
+    
 template:
+  # 可写的 layouts.json 路径
   layouts-path: data/layouts.json
+  # 新增版式 HTML 保存目录
   html-dir: data/results
 
-# 业务阶段：静态页路径、版式持久化（DB/文件）等
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

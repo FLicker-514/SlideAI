@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>C1 时间线/发展史</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Microsoft YaHei", sans-serif; background: #f5f5f5; padding: 24px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .slide { width: 960px; height: 540px; background: #fff; border: 1px solid #ddd; padding: 48px; }
+    .title { font-size: 26px; font-weight: 600; color: #333; margin-bottom: 40px; }
+    .timeline { position: relative; padding-left: 0; }
+    .timeline::before { content: ""; position: absolute; left: 100px; top: 0; bottom: 0; width: 2px; background: #ccc; }
+    .item { display: flex; align-items: flex-start; margin-bottom: 28px; }
+    .date { width: 80px; flex-shrink: 0; font-size: 16px; font-weight: 600; color: #555; text-align: right; padding-right: 24px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; background: #999; margin-left: -6px; margin-top: 4px; flex-shrink: 0; position: relative; z-index: 1; }
+    .content { margin-left: 24px; }
+    .content h3 { font-size: 18px; color: #333; margin-bottom: 4px; }
+    .content p { font-size: 14px; color: #666; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <h2 class="title">发展历程</h2>
+    <div class="timeline">
+      <div class="item">
+        <span class="date">2022</span>
+        <span class="dot"></span>
+        <div class="content">
+          <h3>项目启动</h3>
+          <p>团队成立，确定方向。</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="date">2023</span>
+        <span class="dot"></span>
+        <div class="content">
+          <h3>产品上线</h3>
+          <p>首版发布，获得初期用户。</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="date">2024</span>
+        <span class="dot"></span>
+        <div class="content">
+          <h3>规模扩张</h3>
+          <p>业务拓展，团队扩容。</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="date">2025</span>
+        <span class="dot"></span>
+        <div class="content">
+          <h3>持续迭代</h3>
+          <p>优化产品，探索新场景。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

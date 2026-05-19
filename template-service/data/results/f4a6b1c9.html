@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>B2 图文卡片</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Microsoft YaHei", sans-serif; background: #f5f5f5; padding: 24px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .slide { width: 960px; height: 540px; background: #fff; border: 1px solid #ddd; padding: 48px; }
+    .title { font-size: 26px; font-weight: 600; color: #333; margin-bottom: 32px; text-align: center; }
+    .cards { display: flex; gap: 24px; justify-content: center; align-items: stretch; }
+    .card { flex: 1; border: 1px solid #ddd; display: flex; flex-direction: column; max-width: 260px; }
+    .card-img { height: 120px; background: #e8e8e8; }
+    .card-body { padding: 16px; flex: 1; }
+    .card-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px; }
+    .card-desc { font-size: 14px; color: #666; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <h2 class="title">产品核心卖点</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-img"></div>
+        <div class="card-body">
+          <div class="card-title">卖点一</div>
+          <div class="card-desc">配图 + 简短说明文字，突出该要点。</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img"></div>
+        <div class="card-body">
+          <div class="card-title">卖点二</div>
+          <div class="card-desc">配图 + 简短说明文字，突出该要点。</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img"></div>
+        <div class="card-body">
+          <div class="card-title">卖点三</div>
+          <div class="card-desc">配图 + 简短说明文字，突出该要点。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>16:9 PPT 模板设计器</title>
+    <style>
+        :root { --primary: #007bff; --bg: #f0f2f5; }
+        body { font-family: sans-serif; display: flex; margin: 0; height: 100vh; background: var(--bg); overflow: hidden; }
+        
+        /* 侧边栏 */
+        #sidebar { width: 280px; background: white; border-right: 1px solid #ddd; padding: 20px; display: flex; flex-direction: column; gap: 15px; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
+        .btn { padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-secondary { background: var(--primary); }
+        .btn-ghost { background: #eef2ff; color: #1f2a44; }
+        .btn-danger { background: #dc2626; }
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label { font-size: 12px; color: #555; }
+        .field input {
+            height: 36px;
+            padding: 0 10px;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            outline: none;
+        }
+        .field input:focus { border-color: rgba(0,123,255,0.5); box-shadow: 0 0 0 3px rgba(0,123,255,0.12); }
+        .section-title { font-size: 12px; color: #888; margin: 0; }
+
+        /* 中央视图区 */
+        #viewport { flex: 1; display: flex; align-items: center; justify-content: center; overflow: auto; padding: 40px; }
+
+        /* 16:9 固定画布 */
+        #canvas { 
+            width: 1280px; height: 720px; /* 标准 720p 16:9 比例 */
+            background: white; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            /* 辅助背景 */
+            background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px;
+            transform-origin: center center; /* 用于缩放预览 */
+        }
+
+        /* 元素块 */
+        .drag-item {
+            position: absolute; min-width: 50px; min-height: 30px;
+            background: rgba(255,255,255,0.8); border: 1px solid #ccc;
+            cursor: move; box-sizing: border-box; resize: both; overflow: auto;
+        }
+        .drag-item.selected { border: 2px solid var(--primary); z-index: 100; box-shadow: 0 0 10px rgba(0,123,255,0.3); }
+        .drag-item::-webkit-resizer { border-radius: 50%; background: var(--primary); width: 10px; height: 10px; }
+
+        .drag-handle {
+            height: 24px;
+            line-height: 24px;
+            padding: 0 8px;
+            font-size: 12px;
+            color: #555;
+            background: rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            cursor: move;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .drag-handle .handle-title { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .drag-handle .handle-actions { display: flex; align-items: center; gap: 6px; }
+        .icon-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            border: 1px solid rgba(15, 23, 42, 0.18);
+            background: rgba(255,255,255,0.75);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #0f172a;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.95); }
+        .icon-btn.danger { border-color: rgba(220, 38, 38, 0.35); color: #b91c1c; }
+
+        [contenteditable] { outline: none; padding: 5px; min-height: 20px; }
+
+        /* 组件默认样式（编辑态/导出态都会沿用） */
+        .ppt-title { font-size: 44px; font-weight: 800; letter-spacing: 0.5px; margin: 0; }
+        .ppt-subtitle { font-size: 26px; font-weight: 600; margin: 8px 0 0; color: #334155; }
+        .ppt-body { font-size: 22px; line-height: 1.5; color: #111827; }
+        .ppt-bullets { margin: 0; padding-left: 1.1em; font-size: 22px; line-height: 1.6; }
+        .ppt-card {
+            height: 100%;
+            border-radius: 16px;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            background: #ffffff;
+            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+            padding: 18px 18px 14px;
+            box-sizing: border-box;
+        }
+        .ppt-card h3 { margin: 0 0 8px; font-size: 22px; }
+        .ppt-card p { margin: 0; font-size: 18px; color: #334155; line-height: 1.55; }
+        .ppt-image {
+            height: 100%;
+            border-radius: 14px;
+            border: 2px dashed rgba(15, 23, 42, 0.25);
+            background: linear-gradient(135deg, rgba(226,232,240,0.7), rgba(248,250,252,0.8));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #475569;
+            box-sizing: border-box;
+        }
+        .ppt-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; height: 100%; }
+        .ppt-two-col > div { border: 1px solid rgba(15, 23, 42, 0.12); border-radius: 14px; padding: 12px; background: rgba(255,255,255,0.9); }
+
+        .tabs-row{ display:flex; gap:10px; margin: 2px 0 10px; }
+        .tab-btn{
+            flex: 1 1 0;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #d0d7de;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 800;
+            color: #1f2a44;
+        }
+        .tab-btn.active{
+            border-color: rgba(0,123,255,0.35);
+            background: #eef2ff;
+        }
+
+        .comp-panel{
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.75);
+        }
+        .comp-grid{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            min-height: 116px; /* 固定保留高度：2行按钮 */
+        }
+        .comp-grid .placeholder{
+            height: 44px;
+            border-radius: 8px;
+            border: 1px dashed rgba(15, 23, 42, 0.18);
+            background: rgba(255,255,255,0.5);
+        }
+        .pager{
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .pager .pager-btn{
+            flex: 0 0 auto;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(15, 23, 42, 0.18);
+            background: rgba(255,255,255,0.8);
+            cursor: pointer;
+            font-weight: 800;
+            color: #1f2a44;
+        }
+        .pager .pager-btn:disabled{
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .pager .pager-info{
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 800;
+            text-align: center;
+            flex: 1 1 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h3>PPT 模板编辑</h3>
+        <p class="section-title">组件库</p>
+        <div class="tabs-row">
+            <button id="tab-basic" type="button" class="tab-btn active" onclick="setComponentTab('basic')">基础组件</button>
+            <button id="tab-custom" type="button" class="tab-btn" onclick="setComponentTab('custom')">自制组件</button>
+        </div>
+        <div id="basic-components-wrap">
+            <div class="comp-panel">
+                <div id="component-library" class="comp-grid"></div>
+                <div class="pager">
+                    <button id="basic-prev" class="pager-btn" type="button">上一页</button>
+                    <div id="basic-page" class="pager-info">1/1</div>
+                    <button id="basic-next" class="pager-btn" type="button">下一页</button>
+                </div>
+            </div>
+        </div>
+        <div id="custom-components-wrap" style="display:none;">
+            <div class="comp-panel">
+                <div id="custom-component-library" class="comp-grid"></div>
+                <div class="pager">
+                    <button id="custom-prev" class="pager-btn" type="button">上一页</button>
+                    <div id="custom-page" class="pager-info">1/1</div>
+                    <button id="custom-next" class="pager-btn" type="button">下一页</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="field">
+            <label>导出文件名（不含后缀）</label>
+            <input id="export-name" type="text" placeholder="例如：layout-cover-01" value="layout-demo">
+        </div>
+        <div class="control-group">
+            <label>视图缩放: <span id="zoom-val">70</span>%</label>
+            <input type="range" min="20" max="100" value="70" oninput="setZoom(this.value)">
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="copySelected()">复制（Ctrl/Cmd+C）</button>
+            <button class="btn btn-secondary" onclick="pasteClipboard()">粘贴（Ctrl/Cmd+V）</button>
+        </div>
+        <button id="pick-save-folder-btn" class="btn btn-secondary" onclick="pickSaveFolder()">📁 选择保存目录（写入 results/）</button>
+        <button class="btn btn-danger" onclick="deleteSelected()">🗑 删除选中组件（Delete）</button>
+        <button id="go-add-layout-btn" class="btn btn-secondary" onclick="goAddLayoutPage()">➕ 添加到版式库（跳转）</button>
+        <button id="export-html-btn" class="btn btn-secondary" onclick="exportHTML()">📄 导出纯净 HTML</button>
+        <p style="font-size: 11px; color: #999;">* 画布大小固定为 1280x720 (16:9)</p>
+    </div>
+
+    <div id="viewport">
+        <div id="canvas"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        let activeEl = null;
+        let isDragging = false;
+        let offset = { x: 0, y: 0 };
+        let clipboardItem = null;
+        let saveDirHandle = null;
+        const CANVAS_W = 1280;
+        const CANVAS_H = 720;
+        const qs = new URLSearchParams(location.search);
+        const USER_ID = String(qs.get('userId') || '').trim();
+        const PAGE_SIZE = 4;
+        let basicPage = 0;
+        let customPage = 0;
+        let customListCache = null;
+
+        function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+        function updatePager(which, pageIndex, totalPages) {
+            const prev = document.getElementById(`${which}-prev`);
+            const next = document.getElementById(`${which}-next`);
+            const info = document.getElementById(`${which}-page`);
+            const tp = Math.max(1, Number(totalPages) || 1);
+            const pi = clamp(Number(pageIndex) || 0, 0, tp - 1);
+            if (info) info.textContent = `${pi + 1}/${tp}`;
+            if (prev) prev.disabled = pi <= 0;
+            if (next) next.disabled = pi >= tp - 1;
+        }
+
+        function fillPlaceholders(host, count, totalSlots) {
+            const need = Math.max(0, totalSlots - count);
+            for (let i = 0; i < need; i++) {
+                const ph = document.createElement('div');
+                ph.className = 'placeholder';
+                host.appendChild(ph);
+            }
+        }
+
+        function setComponentTab(tab) {
+            const basicWrap = document.getElementById('basic-components-wrap');
+            const customWrap = document.getElementById('custom-components-wrap');
+            const b = document.getElementById('tab-basic');
+            const c = document.getElementById('tab-custom');
+            if (!basicWrap || !customWrap || !b || !c) return;
+            const isBasic = tab !== 'custom';
+            basicWrap.style.display = isBasic ? '' : 'none';
+            customWrap.style.display = isBasic ? 'none' : '';
+            b.classList.toggle('active', isBasic);
+            c.classList.toggle('active', !isBasic);
+            if (!isBasic) {
+                try { renderCustomLibrary(); } catch {}
+            }
+        }
+
+        const COMPONENTS = {
+            title: {
+                label: '标题',
+                defaultSize: { w: 900, h: 120 },
+                defaultPos: { x: 80, y: 90 },
+                html: '<h1 class="ppt-title">在此输入主标题</h1>'
+            },
+            subtitle: {
+                label: '副标题',
+                defaultSize: { w: 900, h: 90 },
+                defaultPos: { x: 80, y: 220 },
+                html: '<h2 class="ppt-subtitle">在此输入副标题</h2>'
+            },
+            text: {
+                label: '正文',
+                defaultSize: { w: 520, h: 180 },
+                defaultPos: { x: 80, y: 330 },
+                html: '<div class="ppt-body">在此输入正文内容，可换行。</div>'
+            },
+            bullets: {
+                label: '要点列表',
+                defaultSize: { w: 560, h: 260 },
+                defaultPos: { x: 80, y: 330 },
+                html: '<ul class="ppt-bullets"><li>要点 1</li><li>要点 2</li><li>要点 3</li></ul>'
+            },
+            image: {
+                label: '图片占位',
+                defaultSize: { w: 520, h: 320 },
+                defaultPos: { x: 680, y: 220 },
+                html: '<div class="ppt-image">图片占位（导出后可替换为 &lt;img&gt;）</div>'
+            },
+            card: {
+                label: '卡片',
+                defaultSize: { w: 520, h: 260 },
+                defaultPos: { x: 680, y: 240 },
+                html: '<div class="ppt-card"><h3>卡片标题</h3><p>这里写卡片内容说明，支持多行。</p></div>'
+            },
+            twoCol: {
+                label: '双栏',
+                defaultSize: { w: 1120, h: 360 },
+                defaultPos: { x: 80, y: 300 },
+                html: '<div class="ppt-two-col"><div>左栏内容…</div><div>右栏内容…</div></div>'
+            }
+        };
+
+        function getBuiltInComponentTypes() {
+            return Object.keys(COMPONENTS);
+        }
+
+        function renderBuiltInLibrary() {
+            const el = document.getElementById('component-library');
+            if (!el) return;
+            el.innerHTML = '';
+            const types = getBuiltInComponentTypes();
+            const totalPages = Math.max(1, Math.ceil(types.length / PAGE_SIZE));
+            basicPage = clamp(basicPage, 0, totalPages - 1);
+            const slice = types.slice(basicPage * PAGE_SIZE, basicPage * PAGE_SIZE + PAGE_SIZE);
+
+            slice.forEach((type) => {
+                const def = COMPONENTS[type];
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-ghost';
+                btn.type = 'button';
+                btn.textContent = def?.label || type;
+                btn.onclick = () => addComponent(type);
+                el.appendChild(btn);
+            });
+            fillPlaceholders(el, slice.length, PAGE_SIZE);
+            updatePager('basic', basicPage, totalPages);
+        }
+
+        async function fetchJson(url) {
+            const resp = await fetch(url, { credentials: 'same-origin' });
+            const data = await resp.json().catch(() => null);
+            return data;
+        }
+
+        function customTypeId(id) {
+            return `custom:${id}`;
+        }
+
+        const customHtmlCache = new Map();
+
+        async function fetchComponentList() {
+            if (!USER_ID) return [];
+            const res = await fetchJson(`/api/component/list?userId=${encodeURIComponent(USER_ID)}`);
+            if (!res || res.code !== 200 || !Array.isArray(res.data)) return [];
+            return res.data.map((x) => ({
+                id: String(x.id || ''),
+                name: String(x.name || ''),
+                description: String(x.description || '')
+            })).filter((x) => x.id && x.name);
+        }
+
+        async function fetchComponentHtml(id) {
+            if (customHtmlCache.has(id)) return customHtmlCache.get(id);
+            const res = await fetchJson(`/api/component/detail?userId=${encodeURIComponent(USER_ID)}&id=${encodeURIComponent(id)}`);
+            const html = res && res.code === 200 && res.data ? String(res.data.html || '') : '';
+            customHtmlCache.set(id, html);
+            return html;
+        }
+
+        async function insertCustomComponent(meta, idx) {
+            if (!meta || !meta.id) return;
+            const html = await fetchComponentHtml(meta.id);
+            if (!html) {
+                alert('组件内容为空或加载失败');
+                return;
+            }
+            const key = customTypeId(meta.id);
+            if (!COMPONENTS[key]) {
+                const col = idx % 2;
+                const row = Math.floor(idx / 2);
+                COMPONENTS[key] = {
+                    label: meta.name,
+                    defaultSize: { w: 520, h: 220 },
+                    defaultPos: { x: 80 + col * 560, y: 80 + row * 40 },
+                    html
+                };
+            } else {
+                COMPONENTS[key].html = html;
+                COMPONENTS[key].label = meta.name || COMPONENTS[key].label;
+            }
+            addComponent(key);
+        }
+
+        async function renderCustomLibrary(forceReload = false) {
+            const host = document.getElementById('custom-component-library');
+            if (!host) return;
+            host.innerHTML = '';
+
+            if (!USER_ID) {
+                const empty = document.createElement('div');
+                empty.className = 'placeholder';
+                empty.style.gridColumn = '1 / -1';
+                empty.style.height = 'auto';
+                empty.style.padding = '10px';
+                empty.style.borderStyle = 'dashed';
+                empty.textContent = '未传入 userId（请从系统内打开可视化编辑器并保持登录）';
+                host.appendChild(empty);
+                fillPlaceholders(host, 1, PAGE_SIZE);
+                updatePager('custom', 0, 1);
+                return;
+            }
+
+            // 先占位，保持高度
+            fillPlaceholders(host, 0, PAGE_SIZE);
+            updatePager('custom', customPage, 1);
+
+            if (forceReload || !Array.isArray(customListCache)) {
+                customListCache = await fetchComponentList();
+            }
+            const customList = Array.isArray(customListCache) ? customListCache : [];
+
+            if (customList.length === 0) {
+                host.innerHTML = '';
+                const empty = document.createElement('div');
+                empty.className = 'placeholder';
+                empty.style.gridColumn = '1 / -1';
+                empty.style.height = 'auto';
+                empty.style.padding = '10px';
+                empty.style.borderStyle = 'dashed';
+                empty.textContent = '暂无组件（请先在“组件管理”中生成并保存）';
+                host.appendChild(empty);
+                fillPlaceholders(host, 1, PAGE_SIZE);
+                updatePager('custom', 0, 1);
+                return;
+            }
+
+            const totalPages = Math.max(1, Math.ceil(customList.length / PAGE_SIZE));
+            customPage = clamp(customPage, 0, totalPages - 1);
+            const start = customPage * PAGE_SIZE;
+            const slice = customList.slice(start, start + PAGE_SIZE);
+
+            host.innerHTML = '';
+            slice.forEach((c, i) => {
+                const idx = start + i;
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-ghost';
+                btn.type = 'button';
+                btn.textContent = c.name;
+                btn.title = c.description || c.name;
+                btn.onclick = async () => {
+                    btn.disabled = true;
+                    try {
+                        await insertCustomComponent(c, idx);
+                    } finally {
+                        btn.disabled = false;
+                    }
+                };
+                host.appendChild(btn);
+            });
+            fillPlaceholders(host, slice.length, PAGE_SIZE);
+            updatePager('custom', customPage, totalPages);
+        }
+
+        // 1. 设置缩放预览 (方便在大屏幕或小屏幕都能看全)
+        function setZoom(val) {
+            canvas.style.transform = `scale(${val / 100})`;
+            document.getElementById('zoom-val').innerText = val;
+        }
+        setZoom(70); // 默认 70% 缩放
+
+        (function applyEmbedMode() {
+            const qs = new URLSearchParams(location.search);
+            const embed = qs.get('embed');
+            if (embed !== '1' && embed !== 'true') return;
+            const btn = document.getElementById('pick-save-folder-btn');
+            if (btn) btn.remove();
+            const go = document.getElementById('go-add-layout-btn');
+            if (go) go.remove();
+            const exp = document.getElementById('export-html-btn');
+            if (exp) exp.remove();
+        })();
+
+        function sanitizeFileName(name) {
+            // 允许中文等 Unicode；仅移除文件系统不允许/不安全的字符
+            // Windows 禁止: \ / : * ? " < > |
+            const cleaned = String(name ?? '').trim().replace(/\s+/g, '-');
+            const safe = cleaned.replace(/[\\/:*?"<>|]/g, '').replace(/\.+$/g, '');
+            return safe || 'layout';
+        }
+
+        function getExportBaseName() {
+            const raw = document.getElementById('export-name')?.value ?? '';
+            return sanitizeFileName(raw);
+        }
+
+        async function writeTextFileToResults(filename, content, mimeType) {
+            if (!saveDirHandle) return false;
+            try {
+                // 确保 results 子目录存在
+                const resultsDir = await saveDirHandle.getDirectoryHandle('results', { create: true });
+                const fileHandle = await resultsDir.getFileHandle(filename, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(new Blob([content], { type: mimeType }));
+                await writable.close();
+                return true;
+            } catch (err) {
+                console.warn('写入 results 失败，将降级为下载', err);
+                return false;
+            }
+        }
+
+        async function pickSaveFolder() {
+            if (!window.showDirectoryPicker) {
+                alert('当前浏览器不支持直接写入文件夹。请使用 Chrome/Edge 并通过 http(s) 或 localhost 打开此页面。');
+                return;
+            }
+            try {
+                saveDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+                // 尝试持久化（不同浏览器策略不同，失败也没关系）
+                try {
+                    localStorage.setItem('ppt_template_designer_save_dir', 'selected');
+                } catch {}
+                alert('已选择保存目录。之后“保存/导出”会优先写入该目录下的 results/ 文件夹。');
+            } catch (e) {
+                // 用户取消
+            }
+        }
+
+        function addComponent(type) {
+            addItem(type);
+        }
+
+        // 初始化组件库 UI（内置 + 自定义）
+        renderBuiltInLibrary();
+        renderCustomLibrary();
+
+        (function bindPagers(){
+            const bp = document.getElementById('basic-prev');
+            const bn = document.getElementById('basic-next');
+            const cp = document.getElementById('custom-prev');
+            const cn = document.getElementById('custom-next');
+            if (bp) bp.onclick = () => { basicPage = Math.max(0, basicPage - 1); renderBuiltInLibrary(); };
+            if (bn) bn.onclick = () => { basicPage = basicPage + 1; renderBuiltInLibrary(); };
+            if (cp) cp.onclick = () => { customPage = Math.max(0, customPage - 1); renderCustomLibrary(); };
+            if (cn) cn.onclick = () => { customPage = customPage + 1; renderCustomLibrary(); };
+        })();
+
+        function clearSelection() {
+            document.querySelectorAll('.drag-item').forEach(el => el.classList.remove('selected'));
+            activeEl = null;
+        }
+
+        function selectItem(item) {
+            if (!item) return;
+            document.querySelectorAll('.drag-item').forEach(el => el.classList.remove('selected'));
+            item.classList.add('selected');
+            activeEl = item;
+        }
+
+        function deleteSelected() {
+            if (!activeEl) return;
+            const toRemove = activeEl;
+            activeEl = null;
+            toRemove.remove();
+        }
+
+        function captureItemData(el) {
+            if (!el) return null;
+            return {
+                type: el.dataset.component ?? 'text',
+                style: {
+                    left: el.style.left,
+                    top: el.style.top,
+                    width: el.style.width,
+                    height: el.style.height
+                },
+                content: el.querySelector('[contenteditable]')?.innerHTML ?? ''
+            };
+        }
+
+        function copySelected() {
+            if (!activeEl) return;
+            clipboardItem = captureItemData(activeEl);
+        }
+
+        function pasteClipboard() {
+            if (!clipboardItem) return;
+            const pasted = structuredClone ? structuredClone(clipboardItem) : JSON.parse(JSON.stringify(clipboardItem));
+            // 粘贴偏移，避免完全重叠
+            const dx = 20;
+            const dy = 20;
+            const left = parseFloat(String(pasted.style.left ?? '0').replace('px', '')) || 0;
+            const top = parseFloat(String(pasted.style.top ?? '0').replace('px', '')) || 0;
+            pasted.style.left = `${Math.min(CANVAS_W - 10, left + dx)}px`;
+            pasted.style.top = `${Math.min(CANVAS_H - 10, top + dy)}px`;
+            addItem(pasted.type, pasted);
+            // addItem 内部会设置 activeEl 为最新选中（通过 selectItem）
+        }
+
+        // 2. 添加元素
+        function addItem(type, savedData = null) {
+            const def = COMPONENTS[type] ?? COMPONENTS.text;
+            const item = document.createElement('div');
+            item.className = 'drag-item';
+            item.dataset.component = type;
+            
+            // 初始化样式
+            if (savedData) {
+                Object.assign(item.style, savedData.style);
+            } else {
+                item.style.left = `${def.defaultPos.x}px`;
+                item.style.top = `${def.defaultPos.y}px`;
+                item.style.width = `${def.defaultSize.w}px`;
+                item.style.height = `${def.defaultSize.h}px`;
+            }
+
+            const content = savedData ? savedData.content : def.html;
+            
+            const handle = document.createElement('div');
+            handle.className = 'drag-handle';
+
+            const title = document.createElement('div');
+            title.className = 'handle-title';
+            title.textContent = `${def.label}（拖拽移动）`;
+
+            const actions = document.createElement('div');
+            actions.className = 'handle-actions';
+            const delBtn = document.createElement('button');
+            delBtn.className = 'icon-btn danger';
+            delBtn.type = 'button';
+            delBtn.title = '删除组件';
+            delBtn.textContent = '✕';
+            delBtn.onclick = (ev) => {
+                ev.preventDefault();
+                ev.stopPropagation();
+                selectItem(item);
+                deleteSelected();
+            };
+            actions.appendChild(delBtn);
+
+            handle.appendChild(title);
+            handle.appendChild(actions);
+
+            const body = document.createElement('div');
+            body.setAttribute('contenteditable', 'true');
+            body.style.height = 'calc(100% - 24px)';
+            body.style.boxSizing = 'border-box';
+            body.innerHTML = content;
+
+            item.appendChild(handle);
+            item.appendChild(body);
+
+            // 拖拽逻辑
+            item.onmousedown = function(e) {
+                const isHandle = e.target.classList?.contains('drag-handle');
+                if (!isHandle) return;
+                if (e.offsetX > item.offsetWidth - 15) return;
+                
+                isDragging = true;
+                selectItem(item);
+                // 注意：缩放后 clientX 需要除以缩放比例
+                const currentScale = canvas.getBoundingClientRect().width / CANVAS_W;
+                
+                offset.x = e.clientX / currentScale - item.offsetLeft;
+                offset.y = e.clientY / currentScale - item.offsetTop;
+            };
+
+            item.onclick = (e) => {
+                // 点击组件任意位置都选中（编辑内容不影响）
+                if (!(e.target instanceof Node)) return;
+                if (!item.contains(e.target)) return;
+                selectItem(item);
+            };
+
+            canvas.appendChild(item);
+            // 新增/粘贴后默认选中，方便继续操作（移动/复制/删除）
+            selectItem(item);
+        }
+
+        // 3. 全局鼠标移动 (考虑缩放后的位移)
+        window.onmousemove = function(e) {
+            if (!isDragging || !activeEl) return;
+            const currentScale = canvas.getBoundingClientRect().width / CANVAS_W;
+            
+            let newX = e.clientX / currentScale - offset.x;
+            let newY = e.clientY / currentScale - offset.y;
+
+            // 简单的边界限制（防止移出画布）
+            newX = Math.max(0, Math.min(newX, CANVAS_W - activeEl.offsetWidth));
+            newY = Math.max(0, Math.min(newY, CANVAS_H - activeEl.offsetHeight));
+
+            activeEl.style.left = newX + 'px';
+            activeEl.style.top = newY + 'px';
+        };
+
+        window.onmouseup = () => isDragging = false;
+
+        window.onkeydown = (e) => {
+            if ((e.key === 'Delete' || e.key === 'Backspace') && activeEl) {
+                const editing = document.activeElement?.getAttribute?.('contenteditable') === 'true';
+                if (editing) return;
+                e.preventDefault();
+                deleteSelected();
+            }
+            const isMod = e.ctrlKey || e.metaKey;
+            if (isMod && (e.key === 'c' || e.key === 'C')) {
+                const editing = document.activeElement?.getAttribute?.('contenteditable') === 'true';
+                if (editing) return;
+                if (!activeEl) return;
+                e.preventDefault();
+                copySelected();
+            }
+            if (isMod && (e.key === 'v' || e.key === 'V')) {
+                const editing = document.activeElement?.getAttribute?.('contenteditable') === 'true';
+                if (editing) return;
+                if (!clipboardItem) return;
+                e.preventDefault();
+                pasteClipboard();
+            }
+            if (e.key === 'Escape') {
+                clearSelection();
+            }
+        };
+
+        canvas.onclick = (e) => {
+            // 点击空白取消选中
+            if (e.target === canvas) clearSelection();
+        };
+
+        // 4. 持久化数据
+        function saveData() {
+            const items = [];
+            document.querySelectorAll('.drag-item').forEach(el => {
+                items.push({
+                    type: el.dataset.component ?? 'text',
+                    style: {
+                        left: el.style.left,
+                        top: el.style.top,
+                        width: el.style.width,
+                        height: el.style.height
+                    },
+                    content: el.querySelector('[contenteditable]')?.innerHTML ?? ''
+                });
+            });
+
+            const json = JSON.stringify(
+                {
+                    version: 1,
+                    canvas: { width: CANVAS_W, height: CANVAS_H },
+                    items
+                },
+                null,
+                2
+            );
+
+            localStorage.setItem('ppt_template_designer_data_v1', json);
+
+            const fileName = `${getExportBaseName()}.json`;
+            writeTextFileToResults(fileName, json, 'application/json;charset=utf-8').then(written => {
+                if (written) return;
+                const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `results/${fileName}`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(a.href);
+            });
+        }
+
+        // 5. 导出纯净 HTML（去掉编辑态样式 + 去掉 contenteditable）
+        function buildExportHtml() {
+            const clone = canvas.cloneNode(true);
+
+            clone.querySelectorAll('.drag-item').forEach(el => {
+                el.classList.remove('selected');
+                el.style.border = 'none';
+                el.style.boxShadow = 'none';
+                el.style.resize = 'none';
+                el.style.overflow = 'hidden';
+                el.style.background = 'transparent';
+            });
+
+            clone.querySelectorAll('.drag-handle').forEach(el => el.remove());
+            clone.querySelectorAll('[contenteditable]').forEach(el => {
+                el.removeAttribute('contenteditable');
+                el.style.outline = 'none';
+                el.style.padding = '0';
+                el.style.minHeight = '0';
+                el.style.height = '100%';
+            });
+
+            const html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${getExportBaseName()}</title>
+  <style>
+    body { margin: 0; background: #fff; }
+    #canvas { width: ${CANVAS_W}px; height: ${CANVAS_H}px; position: relative; background: #fff; overflow: hidden; }
+    .drag-item { position: absolute; box-sizing: border-box; }
+    .ppt-title { font-size: 44px; font-weight: 800; letter-spacing: 0.5px; margin: 0; }
+    .ppt-subtitle { font-size: 26px; font-weight: 600; margin: 8px 0 0; color: #334155; }
+    .ppt-body { font-size: 22px; line-height: 1.5; color: #111827; }
+    .ppt-bullets { margin: 0; padding-left: 1.1em; font-size: 22px; line-height: 1.6; }
+    .ppt-card { height: 100%; border-radius: 16px; border: 1px solid rgba(15, 23, 42, 0.12); background: #ffffff; box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08); padding: 18px 18px 14px; box-sizing: border-box; }
+    .ppt-card h3 { margin: 0 0 8px; font-size: 22px; }
+    .ppt-card p { margin: 0; font-size: 18px; color: #334155; line-height: 1.55; }
+    .ppt-image { height: 100%; border-radius: 14px; border: 2px dashed rgba(15, 23, 42, 0.25); background: linear-gradient(135deg, rgba(226,232,240,0.7), rgba(248,250,252,0.8)); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #475569; box-sizing: border-box; }
+    .ppt-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; height: 100%; }
+    .ppt-two-col > div { border: 1px solid rgba(15, 23, 42, 0.12); border-radius: 14px; padding: 12px; background: #ffffff; }
+  </style>
+</head>
+<body>
+${clone.outerHTML}
+</body>
+</html>`;
+            return html;
+        }
+
+        function goAddLayoutPage() {
+            const baseName = getExportBaseName();
+            const html = buildExportHtml();
+            localStorage.setItem('ppt_template_designer_last_export_name', baseName);
+            localStorage.setItem('ppt_template_designer_last_export_html', html);
+
+            // 假设该页面与前端同源（或由前端托管）。若是 file:// 打开，则用户需要手动复制粘贴。
+            const url = `/layouts/add?from=designer`;
+            const win = window.open(url, '_blank');
+            if (!win) {
+                alert('无法打开添加页面（可能被浏览器拦截弹窗）。请手动打开系统的“版式管理 -> 添加版式”，并从 localStorage 导入。');
+            }
+        }
+
+        function postExportToParent() {
+            const baseName = getExportBaseName();
+            const html = buildExportHtml();
+            window.parent?.postMessage({ type: 'DESIGNER_EXPORT', name: baseName, html }, '*');
+        }
+
+        window.addEventListener('message', (e) => {
+            const data = e.data;
+            if (!data || typeof data !== 'object') return;
+            if (data.type === 'REQUEST_EXPORT') {
+                const requestId = data.requestId;
+                const baseName = getExportBaseName();
+                const html = buildExportHtml();
+                window.parent?.postMessage({ type: 'DESIGNER_EXPORT', requestId, name: baseName, html }, '*');
+            }
+        });
+
+        // 通知父页面：编辑器已就绪（用于避免父页面过早请求导出）
+        window.addEventListener('DOMContentLoaded', () => {
+            window.parent?.postMessage({ type: 'DESIGNER_READY' }, '*');
+        });
+
+        function exportHTML() {
+            const html = buildExportHtml();
+
+            const fileName = `${getExportBaseName()}.html`;
+            writeTextFileToResults(fileName, html, 'text/html;charset=utf-8').then(written => {
+                if (written) return;
+                const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `results/${fileName}`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(a.href);
+            });
+        }
+
+        // 6. 自动恢复（如果之前保存过）
+        (function restoreFromLocalStorage() {
+            const raw = localStorage.getItem('ppt_template_designer_data_v1');
+            if (!raw) return;
+            let parsed;
+            try {
+                parsed = JSON.parse(raw);
+            } catch {
+                return;
+            }
+            const items = Array.isArray(parsed?.items) ? parsed.items : [];
+            if (!items.length) return;
+            items.forEach(item => addItem(item?.type ?? 'text', item));
+        })();
+
+        // 允许在支持的浏览器里恢复目录选择权限（需要用户交互授权；此处仅保留变量，不自动弹窗）
+    </script>
+
+</body>
+</html>
+

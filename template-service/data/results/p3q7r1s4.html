@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>F2 数据看板</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Microsoft YaHei", sans-serif; background: #f5f5f5; padding: 24px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .slide { width: 960px; height: 540px; background: #fff; border: 1px solid #ddd; padding: 32px; }
+    .title { font-size: 24px; font-weight: 600; color: #333; margin-bottom: 24px; }
+    .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: calc(540px - 32px - 32px - 24px); }
+    .kpi { border: 1px solid #ddd; padding: 20px; display: flex; flex-direction: column; }
+    .kpi-label { font-size: 14px; color: #666; margin-bottom: 8px; }
+    .kpi-value { font-size: 28px; font-weight: 600; color: #333; }
+    .mini-chart { flex: 1; min-height: 100px; background: #f8f8f8; margin-top: 12px; display: flex; align-items: flex-end; gap: 8px; padding: 8px; }
+    .mini-bar { flex: 1; background: #ccc; border-radius: 2px; min-height: 4px; }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <h2 class="title">业务表现看板</h2>
+    <div class="dashboard">
+      <div class="kpi">
+        <span class="kpi-label">营收</span>
+        <span class="kpi-value">1,250 万</span>
+        <div class="mini-chart">
+          <div class="mini-bar" style="height: 40%;"></div>
+          <div class="mini-bar" style="height: 65%;"></div>
+          <div class="mini-bar" style="height: 55%;"></div>
+          <div class="mini-bar" style="height: 90%;"></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">用户数</span>
+        <span class="kpi-value">8.2 万</span>
+        <div class="mini-chart">
+          <div class="mini-bar" style="height: 50%;"></div>
+          <div class="mini-bar" style="height: 70%;"></div>
+          <div class="mini-bar" style="height: 85%;"></div>
+          <div class="mini-bar" style="height: 100%;"></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">转化率</span>
+        <span class="kpi-value">12.5%</span>
+        <div class="mini-chart">
+          <div class="mini-bar" style="height: 60%;"></div>
+          <div class="mini-bar" style="height: 75%;"></div>
+          <div class="mini-bar" style="height: 70%;"></div>
+          <div class="mini-bar" style="height: 80%;"></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">留存率</span>
+        <span class="kpi-value">68%</span>
+        <div class="mini-chart">
+          <div class="mini-bar" style="height: 55%;"></div>
+          <div class="mini-bar" style="height: 62%;"></div>
+          <div class="mini-bar" style="height: 65%;"></div>
+          <div class="mini-bar" style="height: 68%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

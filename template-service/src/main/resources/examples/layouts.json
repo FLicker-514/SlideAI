@@ -1,0 +1,19 @@
+[
+  { "code": "a7f2k9m1", "name": "封面/标题", "description": "包含主标题、副标题、演讲人、日期等。", "file": "a7f2k9m1.html" },
+  { "code": "b3n8p4q0", "name": "目录/议程", "description": "提纲挈领地展示全篇分为几个部分。", "file": "b3n8p4q0.html" },
+  { "code": "c5r1s6t2", "name": "过渡/章节首", "description": "提示进入下一个全新话题。", "file": "c5r1s6t2.html" },
+  { "code": "d9u3v7w4", "name": "总结/结尾", "description": "致谢、联系方式、问答环节或核心呼吁。", "file": "d9u3v7w4.html" },
+  { "code": "e2x8y0z5", "name": "分点枚举", "description": "纯文本的1、2、3、4点罗列，或者带有小图标的要点说明。", "file": "e2x8y0z5.html" },
+  { "code": "f4a6b1c9", "name": "图文卡片", "description": "每个要点都配有具体的图片，例如介绍三款不同产品的核心卖点。", "file": "f4a6b1c9.html" },
+  { "code": "g7d2e5f8", "name": "人物/团队介绍", "description": "特定的枚举形式，包含头像、姓名、Title和简介。", "file": "g7d2e5f8.html" },
+  { "code": "h0g3h6i1", "name": "时间线/发展史", "description": "明确带有年份、日期等时间标记的事件序列。", "file": "h0g3h6i1.html" },
+  { "code": "j4k7l0m3", "name": "步骤/流程图", "description": "第一步、第二步、第三步的操作指南或业务运转流程（如闭环、漏斗、单向箭头）。", "file": "j4k7l0m3.html" },
+  { "code": "n8o2p5q6", "name": "路线图", "description": "展示未来几个季度或几年的规划节点。", "file": "n8o2p5q6.html" },
+  { "code": "r9s3t7u0", "name": "对比与分析", "description": "竞品优劣势分析、方案A与方案B的对比、过去与现在的变化。", "file": "r9s3t7u0.html" },
+  { "code": "v2w6x1y4", "name": "层级与架构", "description": "总分关系、组织架构树状图、马斯洛需求金字塔等自上而下或自下而上的结构。", "file": "v2w6x1y4.html" },
+  { "code": "z5a9b3c8", "name": "包含与构成", "description": "展示一个整体由哪些部分组成（如饼状分割），或者不同概念之间的交集（韦恩图）。", "file": "z5a9b3c8.html" },
+  { "code": "d7e1f5g2", "name": "核心金句", "description": "一两句极其重要的话，通常字号很大，配以引号或纯色背景。", "file": "d7e1f5g2.html" },
+  { "code": "h9i4j8k6", "name": "单一核心数据", "description": "用极大的字号展示一个关键指标（例如\"150%\"），下方配以简短的文字解释。", "file": "h9i4j8k6.html" },
+  { "code": "l0m5n2o9", "name": "单一图表", "description": "一页只展示一个折线图、柱状图或饼图，并配有明确的数据结论。", "file": "l0m5n2o9.html" },
+  { "code": "p3q7r1s4", "name": "数据看板", "description": "一页包含多个相关的微型图表和核心指标，用于全方位展示业务表现。", "file": "p3q7r1s4.html" }
+]

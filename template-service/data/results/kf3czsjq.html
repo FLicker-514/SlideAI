@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>layout-demo</title>
+  <style>
+    body { margin: 0; background: #fff; }
+    #canvas { width: 1280px; height: 720px; position: relative; background: #fff; overflow: hidden; }
+    .drag-item { position: absolute; box-sizing: border-box; }
+    .ppt-title { font-size: 44px; font-weight: 800; letter-spacing: 0.5px; margin: 0; }
+    .ppt-subtitle { font-size: 26px; font-weight: 600; margin: 8px 0 0; color: #334155; }
+    .ppt-body { font-size: 22px; line-height: 1.5; color: #111827; }
+    .ppt-bullets { margin: 0; padding-left: 1.1em; font-size: 22px; line-height: 1.6; }
+    .ppt-card { height: 100%; border-radius: 16px; border: 1px solid rgba(15, 23, 42, 0.12); background: #ffffff; box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08); padding: 18px 18px 14px; box-sizing: border-box; }
+    .ppt-card h3 { margin: 0 0 8px; font-size: 22px; }
+    .ppt-card p { margin: 0; font-size: 18px; color: #334155; line-height: 1.55; }
+    .ppt-image { height: 100%; border-radius: 14px; border: 2px dashed rgba(15, 23, 42, 0.25); background: linear-gradient(135deg, rgba(226,232,240,0.7), rgba(248,250,252,0.8)); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #475569; box-sizing: border-box; }
+    .ppt-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; height: 100%; }
+    .ppt-two-col > div { border: 1px solid rgba(15, 23, 42, 0.12); border-radius: 14px; padding: 12px; background: #ffffff; }
+  </style>
+</head>
+<body>
+<div id="canvas" style="transform: scale(0.7);"><div class="drag-item" data-component="custom:2a98521b2550453aa25cfd7bc7642b7e" style="left: 70.0634px; top: 212.281px; width: 790px; height: 219px; border: none; box-shadow: none; resize: none; overflow: hidden; background: transparent;"><div style="height: 100%; box-sizing: border-box; outline: none; padding: 0px; min-height: 0px;"><div style="width:100%;height:100%;box-sizing:border-box;padding:20px;overflow:hidden;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;justify-content:center;background:#f8f9fa;">
+  <div style="width:160px;text-align:center;flex-shrink:0;">
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#4a6fa5,#6b9ad9);margin:0 auto 12px;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:36px;font-weight:bold;">张</div>
+    </div>
+    <div style="font-weight:600;color:#333;font-size:14px;line-height:1.4;">张明</div>
+    <div style="font-size:12px;color:#666;margin-top:4px;">前端工程师</div>
+  </div>
+  <div style="width:160px;text-align:center;flex-shrink:0;">
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#5d7c4e,#7fb16d);margin:0 auto 12px;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:36px;font-weight:bold;">李</div>
+    </div>
+    <div style="font-weight:600;color:#333;font-size:14px;line-height:1.4;">李婷</div>
+    <div style="font-size:12px;color:#666;margin-top:4px;">UI设计师</div>
+  </div>
+  <div style="width:160px;text-align:center;flex-shrink:0;">
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#8a5a3b,#c78a6a);margin:0 auto 12px;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:36px;font-weight:bold;">王</div>
+    </div>
+    <div style="font-weight:600;color:#333;font-size:14px;line-height:1.4;">王磊</div>
+    <div style="font-size:12px;color:#666;margin-top:4px;">后端开发</div>
+  </div>
+  <div style="width:160px;text-align:center;flex-shrink:0;">
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#6a4c93,#9b75c5);margin:0 auto 12px;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:36px;font-weight:bold;">陈</div>
+    </div>
+    <div style="font-weight:600;color:#333;font-size:14px;line-height:1.4;">陈静</div>
+    <div style="font-size:12px;color:#666;margin-top:4px;">产品经理</div>
+  </div>
+</div></div></div><div class="drag-item" data-component="title" style="left: 25.0634px; top: 50.8416px; width: 900px; height: 120px; border: none; box-shadow: none; resize: none; overflow: hidden; background: transparent;"><div style="height: 100%; box-sizing: border-box; outline: none; padding: 0px; min-height: 0px;"><h1 class="ppt-title">团队成员</h1></div></div></div>
+</body>
+</html>

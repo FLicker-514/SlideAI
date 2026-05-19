@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>F1 单一图表</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Microsoft YaHei", sans-serif; background: #f5f5f5; padding: 24px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .slide { width: 960px; height: 540px; background: #fff; border: 1px solid #ddd; padding: 48px; }
+    .title { font-size: 26px; font-weight: 600; color: #333; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: #666; margin-bottom: 24px; }
+    .chart-wrap { height: 280px; display: flex; align-items: flex-end; justify-content: center; gap: 48px; padding: 0 40px; }
+    .bar-wrap { display: flex; flex-direction: column; align-items: center; }
+    .bar { width: 64px; background: #bbb; border-radius: 4px 4px 0 0; min-height: 20px; }
+    .bar-label { font-size: 14px; color: #666; margin-top: 12px; }
+    .conclusion { margin-top: 24px; padding: 16px; background: #f5f5f5; font-size: 15px; color: #333; border-left: 4px solid #999; }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <h2 class="title">季度营收趋势</h2>
+    <p class="subtitle">单位：万元</p>
+    <div class="chart-wrap">
+      <div class="bar-wrap"><div class="bar" style="height: 120px;"></div><span class="bar-label">Q1</span></div>
+      <div class="bar-wrap"><div class="bar" style="height: 180px;"></div><span class="bar-label">Q2</span></div>
+      <div class="bar-wrap"><div class="bar" style="height: 160px;"></div><span class="bar-label">Q3</span></div>
+      <div class="bar-wrap"><div class="bar" style="height: 220px;"></div><span class="bar-label">Q4</span></div>
+    </div>
+    <div class="conclusion">结论：第四季度营收达全年峰值，同比稳步增长。</div>
+  </div>
+</body>
+</html>

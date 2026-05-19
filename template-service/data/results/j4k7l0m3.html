@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>C2 步骤/流程图</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Microsoft YaHei", sans-serif; background: #f5f5f5; padding: 24px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .slide { width: 960px; height: 540px; background: #fff; border: 1px solid #ddd; padding: 48px; }
+    .title { font-size: 26px; font-weight: 600; color: #333; margin-bottom: 40px; text-align: center; }
+    .steps { display: flex; align-items: center; justify-content: center; gap: 0; }
+    .step { flex: 1; max-width: 180px; text-align: center; }
+    .step-num { width: 40px; height: 40px; border: 2px solid #999; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; color: #555; }
+    .step-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px; }
+    .step-desc { font-size: 13px; color: #666; line-height: 1.4; }
+    .arrow { width: 24px; flex-shrink: 0; color: #999; font-size: 20px; }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <h2 class="title">实施流程</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">需求分析</div>
+        <div class="step-desc">明确目标与范围</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">方案设计</div>
+        <div class="step-desc">制定策略与路径</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">执行落地</div>
+        <div class="step-desc">推进实施与迭代</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-title">复盘总结</div>
+        <div class="step-desc">评估与优化</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
